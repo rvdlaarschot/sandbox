@@ -1,0 +1,29 @@
+name: test branch based variables
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  set_branch_vars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the current branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set the variables
+        uses: iamtheyammer/branch-env-vars@v1.0.4
+        with:
+          SECRET_KEY: |
+            main:${{ secrets.SECRET_KEY }}
+          CHECKVAR: |
+            main:"hi i am checkvar"
+
+      - name: Test by python
+        run: |
+          echo "start of echo :"
+          echo "${{ env.SECRET_KEY }}"
+          echo "${{ env.CHECKVAR }}"
+          echo "end of echo"
